@@ -1,0 +1,7 @@
+#+TITLE: Shape Server
+#+OPTIONS: toc:nil
+
+** Building
+#+BEGIN_SRC bash
+$ stack setup && stack build
+#+END_SRC
