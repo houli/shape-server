@@ -22,8 +22,10 @@ executable shape-server
                      , blaze-svg
                      , matrix
                      , scotty
-  other-modules:       Shapes
+  other-modules:       Colour
                      , Render
+                     , Shapes
+                     , StyleSheet
   default-language:    Haskell2010
 
 source-repository head

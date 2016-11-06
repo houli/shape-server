@@ -7,6 +7,8 @@
 
 import qualified Data.Matrix as M
 
+import StyleSheet (StyleSheet)
+
 data Shape = Empty
            | Circle
            | Square
@@ -30,11 +32,13 @@ scale = Scale
 rotate = Rotate
 t0 <+> t1 = Compose t0 t1
 
+-- Composition of transforms is matrix multiplication
 transform :: Transform -> M.Matrix Double
 transform Identity = M.identity 3
 transform (Translate x y) = M.fromLists [[1, 0, x], [0, 1, y], [0, 0, 1]]
 transform (Scale x y) = M.fromLists [[x, 0, 0], [0, y, 0], [0, 0, 1]]
-transform (Rotate b) = let a = (b * pi) / 180 in M.fromLists [[cos a, -(sin a), 0], [sin a, cos a, 0], [0, 0, 1]]
+transform (Rotate b) = let a = (b * pi) / 180 in
+                         M.fromLists [[cos a, -(sin a), 0], [sin a, cos a, 0], [0, 0, 1]]
 transform (Compose t1 t2) = transform t1 `M.multStd2` transform t2
 
-type Drawing = [(Transform, Shape)]
+type Drawing = [(Transform, Shape, StyleSheet)]
