@@ -4,9 +4,19 @@ module Colour
    teal, blue, navy, fuchsia, purple, custom
   ) where
 
-import Data.Aeson
-import Data.Word (Word8)
-import Text.Printf (printf)
+import           Data.Aeson
+import           Data.Char (toLower)
+import           Data.Maybe (fromJust)
+import           Data.List (elemIndex)
+import           Data.Text (unpack)
+import           Data.Word (Word8)
+import           Text.Printf (printf)
+import qualified Text.Regex.Posix as RP
+
+-- OverloadedStrings cause problems unless regex match
+-- operator has its type strictly defined
+(=~) :: String -> String -> [[String]]
+(=~) = (RP.=~)
 
 -- The original 16 HTML colours as well as custom hex colours
 data Colour = White
@@ -65,10 +75,15 @@ instance FromJSON Colour where
       "navy"    -> pure Navy
       "fuchsia" -> pure Fuchsia
       "purple"  -> pure Purple
-      str       -> parseCustom str
+      str       -> parseCustom $ unpack str
     where
-      -- TODO: Parse hex colours
-      parseCustom str = fail "Unknown colour"
+      parseCustom str = case str =~ "^#([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$" of
+                          [] -> fail ("Invalid colour \"" ++ str ++ "\"")
+                          [[_, r, g, b]] ->
+                            pure $ Custom (hexToWord8 r) (hexToWord8 g) (hexToWord8 b)
+      hexToWord8 :: String -> Word8
+      hexToWord8 = foldl (\n c -> 16 * n + hexChar (toLower c)) 0
+      hexChar ch = fromIntegral $ fromJust $ elemIndex ch "0123456789abcdef"
 
 white   = White
 silver  = Silver

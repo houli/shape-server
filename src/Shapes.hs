@@ -32,7 +32,7 @@ instance FromJSON Shape where
     case shape of
       "circle" -> pure Circle
       "square" -> pure Square
-      _        -> fail ("Unknown shape " ++ shape)
+      _        -> fail ("Invalid shape \"" ++ shape ++ "\"")
 
 empty, circle, square :: Shape
 empty = Empty
@@ -53,7 +53,7 @@ instance FromJSON Transform where
       "translate" -> Translate <$> o .: "x" <*> o.: "y"
       "scale"     -> Scale <$> o .: "x" <*> o.: "y"
       "rotate"    -> Rotate <$> o .: "angle"
-      _           -> fail ("Unknown transform " ++ transformType)
+      _           -> fail ("Invalid transform \"" ++ transformType ++ "\"")
 
 identity = Identity
 translate = Translate

@@ -21,7 +21,9 @@ executable shape-server
                      , base
                      , blaze-svg
                      , matrix
+                     , regex-posix
                      , scotty
+                     , text
   other-modules:       Colour
                      , Render
                      , Shapes
