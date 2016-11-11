@@ -77,7 +77,7 @@ type Drawing = [(Transform, Shape, StyleSheet)]
 instance {-# OVERLAPPING #-} FromJSON (Transform, Shape, StyleSheet) where
   parseJSON = withObject "styled, transformed, shape" $ \o -> do
     shape <- parseJSON (Object o)
-    styleSheet <- o .:? "stylesheet" .!= defaultStyle
+    styleSheet <- o .:? "styleSheet" .!= defaultStyle
     transforms <- o .:? "transform" .!= [identity]
     let composedTransforms = foldl1 (<+>) transforms
     pure (composedTransforms, shape, styleSheet)

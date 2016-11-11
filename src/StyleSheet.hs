@@ -17,7 +17,7 @@ data StyleSheet = StyleSheet Double Colour Colour
                   deriving Show
 
 instance FromJSON StyleSheet where
-  parseJSON = withObject "stylesheet" $ \o -> do
+  parseJSON = withObject "styleSheet" $ \o -> do
     width <- o .:? "strokeWidth" .!= 0
     strokeColour <- o .:? "stroke" .!= black
     fillColour <-  o .:? "fill" .!= black
