@@ -5,9 +5,20 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   </head>
   <body>
-    <code>curl -H "Content-Type: application/json" --data @example.json http://localhost:3000/draw > output.svg</code>
-    Example JSON:
-<pre>[
+    <div class="jumbotron text-center">
+      <h1>Shapes as a Service</h1>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-offset-1 col-sm-10">
+          <a href="/demo" class="btn btn-primary">Try a demo!</a>
+          <p>
+            Use
+            <code>curl -H "Content-Type: application/json" --data @example.json http://localhost:3000/draw > output.svg</code>
+            to send a JSON request using <code>example.json</code> and save the result in <code>output.svg</code>
+          </p>
+          <h3>Here is some example JSON:</h3>
+          <pre>[
   {
     "shape": "circle"
   },
@@ -56,5 +67,8 @@
     }
   }
 ]</pre>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
