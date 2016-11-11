@@ -5,6 +5,7 @@
   transform
   ) where
 
+import           Data.Aeson
 import qualified Data.Matrix as M
 
 import StyleSheet (StyleSheet)
@@ -13,6 +14,14 @@ data Shape = Empty
            | Circle
            | Square
            deriving Show
+
+instance FromJSON Shape where
+  parseJSON = withObject "circle or square" $ \o -> do
+    shape <- o .: "shape"
+    case shape of
+      "circle" -> pure Circle
+      "square" -> pure Square
+      _        -> fail ("Unknown shape " ++ shape)
 
 empty, circle, square :: Shape
 empty = Empty
