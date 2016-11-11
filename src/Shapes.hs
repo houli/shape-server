@@ -3,12 +3,13 @@
   empty, circle, square,
   identity, translate, rotate, scale, (<+>),
   transform
+{-# LANGUAGE FlexibleInstances #-}
   ) where
 
 import           Data.Aeson
 import qualified Data.Matrix as M
 
-import StyleSheet (StyleSheet)
+import           StyleSheet (StyleSheet, defaultStyle)
 
 data Shape = Empty
            | Circle
@@ -60,3 +61,13 @@ transform (Rotate b) = let a = (b * pi) / 180 in
 transform (Compose t1 t2) = transform t1 `M.multStd2` transform t2
 
 type Drawing = [(Transform, Shape, StyleSheet)]
+
+-- Define for a single triple and use the built-in list instance that
+-- is defined for "instance FromJSON a => FromJSON [a]"
+instance {-# OVERLAPPING #-} FromJSON (Transform, Shape, StyleSheet) where
+  parseJSON = withObject "styled, transformed, shape" $ \o -> do
+    shape <- parseJSON (Object o)
+    styleSheet <- o .:? "stylesheet" .!= defaultStyle
+    transforms <- o .:? "transform" .!= [identity]
+    let composedTransforms = foldl1 (<+>) transforms
+    pure (composedTransforms, shape, styleSheet)
