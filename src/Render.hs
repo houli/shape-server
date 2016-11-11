@@ -1,5 +1,3 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Render (render) where
 
 import           Data.Matrix (getElem)
@@ -22,12 +20,12 @@ renderDrawing [x] = renderTriple x
 renderDrawing (x : xs) = renderTriple x >> renderDrawing xs
 
 renderTriple :: (Transform, Shape, StyleSheet) -> Svg
-renderTriple (tr, sh, (StyleSheet sw sc fc)) = renderShape sh !
-                                               renderTransform tr !
-                                               strokeWidth (stringAttr sw) !
-                                               stroke (stringAttr sc) !
-                                               fill (stringAttr fc) !
-                                               customAttribute "vector-effect" "non-scaling-stroke"
+renderTriple (tr, sh, StyleSheet sw sc fc) = renderShape sh !
+                                             renderTransform tr !
+                                             strokeWidth (stringAttr sw) !
+                                             stroke (stringAttr sc) !
+                                             fill (stringAttr fc) !
+                                             customAttribute "vector-effect" "non-scaling-stroke"
   where
     stringAttr :: Show a => a -> AttributeValue
     stringAttr = stringValue . show

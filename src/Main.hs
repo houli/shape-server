@@ -1,13 +1,9 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module Main where
 
 import Text.Blaze.Svg.Renderer.Utf8 (renderSvg)
 import Web.Scotty
 
 import Render
-import Shapes
-import StyleSheet
 
 svg drawing = do
   setHeader "Content-Type" "image/svg+xml"

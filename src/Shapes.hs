@@ -1,9 +1,19 @@
- module Shapes (
-  Shape(..), Drawing, Transform,
-  empty, circle, square,
-  identity, translate, rotate, scale, (<+>),
-  transform
 {-# LANGUAGE FlexibleInstances #-}
+
+module Shapes
+  (
+    Shape(..)
+  , Drawing
+  , Transform
+  , empty
+  , circle
+  , square
+  , identity
+  , translate
+  , rotate
+  , scale
+  , (<+>)
+  , transform
   ) where
 
 import           Data.Aeson
@@ -56,7 +66,7 @@ transform :: Transform -> M.Matrix Double
 transform Identity = M.identity 3
 transform (Translate x y) = M.fromLists [[1, 0, x], [0, 1, y], [0, 0, 1]]
 transform (Scale x y) = M.fromLists [[x, 0, 0], [0, y, 0], [0, 0, 1]]
-transform (Rotate b) = let a = (b * pi) / 180 in
+transform (Rotate b) = let a = (b * pi) / 180 in -- convert degrees to radians
                          M.fromLists [[cos a, -(sin a), 0], [sin a, cos a, 0], [0, 0, 1]]
 transform (Compose t1 t2) = transform t1 `M.multStd2` transform t2
 
