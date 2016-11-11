@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shape Server</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+    <code>curl -H "Content-Type: application/json" --data @example.json http://localhost:3000/draw > output.svg</code>
+    Example JSON:
+<pre>[
+  {
+    "shape": "circle"
+  },
+  {
+    "shape": "circle",
+    "transform": [
+      {
+        "type": "translate",
+        "x": -10,
+        "y": -8
+      },
+      {
+        "type": "scale",
+        "x": 10,
+        "y": 10
+      }
+    ],
+    "stylesheet": {
+      "strokeWidth": 8,
+      "stroke": "aqua",
+      "fill": "purple"
+    }
+  },
+  {
+    "shape": "square",
+    "transform": [
+      {
+        "type": "translate",
+        "x": 3,
+        "y": 4
+      },
+      {
+        "type": "scale",
+        "x": 10,
+        "y": 10
+      },
+      {
+        "type": "rotate",
+        "angle": 10
+      }
+    ],
+    "stylesheet": {
+      "strokeWidth": 5,
+      "stroke": "green",
+      "fill": "purple"
+    }
+  }
+]</pre>
+  </body>
+</html>

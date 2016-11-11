@@ -16,8 +16,8 @@ svg drawing = do
 
 main :: IO ()
 main = scotty 3000 $ do
-  get "/" $ do
-    svg $ render [(identity, circle, defaultStyle),
-                  (translate 3 4 <+> scale 10 10 <+> rotate 10,
-                   square,
-                   defaultStyle <:> strokeWidth 2 <:> stroke green <:> fill (custom 250 124 124))]
+  get "/" $ file "static/index.html"
+
+  post "/draw" $ do
+    drawing <- jsonData
+    svg $ render drawing
