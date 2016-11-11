@@ -9,10 +9,19 @@ module StyleSheet
   , fill
   ) where
 
+import Data.Aeson
+
 import Colour
 
 data StyleSheet = StyleSheet Double Colour Colour
                   deriving Show
+
+instance FromJSON StyleSheet where
+  parseJSON = withObject "stylesheet" $ \o -> do
+    width <- o .:? "strokeWidth" .!= 0
+    strokeColour <- o .:? "stroke" .!= black
+    fillColour <-  o .:? "fill" .!= black
+    pure $ StyleSheet width strokeColour fillColour
 
 defaultStyle :: StyleSheet
 defaultStyle = StyleSheet 0 black black
