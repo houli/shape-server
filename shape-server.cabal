@@ -27,6 +27,7 @@ executable shape-server
                      , Shapes
                      , StyleSheet
   default-language:    Haskell2010
+  default-extensions:  OverloadedStrings
 
 source-repository head
   type:     git
