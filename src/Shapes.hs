@@ -35,6 +35,15 @@ data Transform = Identity
                | Compose Transform Transform
                deriving Show
 
+instance FromJSON Transform where
+  parseJSON = withObject "transform" $ \o -> do
+    transformType <- o .: "type"
+    case transformType of
+      "translate" -> Translate <$> o .: "x" <*> o.: "y"
+      "scale"     -> Scale <$> o .: "x" <*> o.: "y"
+      "rotate"    -> Rotate <$> o .: "angle"
+      _           -> fail ("Unknown transform " ++ transformType)
+
 identity = Identity
 translate = Translate
 scale = Scale
