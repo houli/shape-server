@@ -4,6 +4,7 @@ module Colour
    teal, blue, navy, fuchsia, purple, custom
   ) where
 
+import Data.Aeson
 import Data.Word (Word8)
 import Text.Printf (printf)
 
@@ -44,6 +45,30 @@ instance Show Colour where
   show Fuchsia        = "fuchsia"
   show Purple         = "purple"
   show (Custom r g b) = printf "#%2x%2x%2x" r g b
+
+instance FromJSON Colour where
+  parseJSON = withText "colour" $ \str ->
+    case str of
+      "white"   -> pure White
+      "silver"  -> pure Silver
+      "gray"    -> pure Gray
+      "black"   -> pure Black
+      "red"     -> pure Red
+      "maroon"  -> pure Maroon
+      "yellow"  -> pure Yellow
+      "olive"   -> pure Olive
+      "lime"    -> pure Lime
+      "green"   -> pure Green
+      "aqua"    -> pure Aqua
+      "teal"    -> pure Teal
+      "blue"    -> pure Blue
+      "navy"    -> pure Navy
+      "fuchsia" -> pure Fuchsia
+      "purple"  -> pure Purple
+      str       -> parseCustom str
+    where
+      -- TODO: Parse hex colours
+      parseCustom str = fail "Unknown colour"
 
 white   = White
 silver  = Silver
