@@ -50,8 +50,8 @@ instance FromJSON Transform where
   parseJSON = withObject "transform" $ \o -> do
     transformType <- o .: "type"
     case transformType of
-      "translate" -> Translate <$> o .: "x" <*> o.: "y"
-      "scale"     -> Scale <$> o .: "x" <*> o.: "y"
+      "translate" -> Translate <$> o .: "x" <*> o .: "y"
+      "scale"     -> Scale <$> o .: "x" <*> o .: "y"
       "rotate"    -> Rotate <$> o .: "angle"
       _           -> fail ("Invalid transform \"" ++ transformType ++ "\"")
 
