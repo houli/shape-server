@@ -1,6 +1,6 @@
 module Render (render) where
 
-import           Data.Matrix (getElem)
+import           Data.Matrix (submatrix, toLists)
 import           Text.Blaze.Svg11
 import           Text.Blaze.Svg11.Attributes
 
@@ -38,9 +38,4 @@ renderShape Circle = circle ! r "1"
 renderTransform :: Transform -> Attribute
 renderTransform t = transform $ matrix a b c d e f
   where mat = S.transform t
-        a = getElem 1 1 mat
-        b = getElem 2 1 mat
-        c = getElem 1 2 mat
-        d = getElem 2 2 mat
-        e = getElem 1 3 mat
-        f = getElem 2 3 mat
+        [[a, c, e], [b, d, f]] = toLists $ submatrix 1 2 1 3 mat
