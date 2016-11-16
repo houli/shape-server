@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Shape Server</title>
+    <title>Shapes as a Service</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,13 +15,11 @@
       <div class="row">
         <div class="col-sm-offset-1 col-sm-10">
           <a href="/demo" class="btn btn-primary">Try a demo!</a>
-          <p>
-            Use
-            <code>curl -H "Content-Type: application/json" --data @example.json http://localhost:3000/draw > output.svg</code>
-            to send a JSON request using <code>example.json</code> and save the result in <code>output.svg</code>
-          </p>
-          <h3>Here is some example JSON:</h3>
-          <pre>[
+          <h3>Enter some JSON for a drawing:</h3>
+          <div class="row">
+            <div class="col-sm-6">
+              <textarea id="json-input" class="form-control" style="resize:none" rows="20">
+[
   {
     "shape": "circle"
   },
@@ -69,9 +67,61 @@
       "fill": "#99aac6"
     }
   }
-]</pre>
+]</textarea>
+            </div>
+            <div id="svg-container" class="col-sm-6"></div>
+          </div>
         </div>
       </div>
     </div>
+    <script type="text/javascript">
+     document.addEventListener('DOMContentLoaded', function() {
+       function reloadSvg() {
+         const json = document.getElementById('json-input').value;
+         try {
+           const reqBody = JSON.parse(json);
+           const svgText = fetch('/draw', {
+             headers: {
+               'Accept': 'application/json',
+               'Content-Type': 'application/json'
+             },
+             method: 'POST',
+             body: JSON.stringify(reqBody)
+           })
+           .then((response) => {
+             if (response.ok) {
+               response.text().then(svg => updateSvgArea(svg));
+             } else {
+               setInvalid();
+             }
+           });
+         }
+         catch (e) {
+           console.log('Invalid JSON');
+         }
+       }
+
+       function setInvalid() {
+         const invalidText = document.createElement('h3');
+         invalidText.appendChild(document.createTextNode('Invalid drawing JSON'));
+         const container = document.getElementById('svg-container');
+         replaceChildren(container, invalidText);
+       }
+
+       function updateSvgArea(svgText) {
+         const svgNode = new DOMParser().parseFromString(svgText, 'text/xml').getElementsByTagName('svg')[0];
+         const container = document.getElementById('svg-container');
+         replaceChildren(container, svgNode);
+       }
+
+       function replaceChildren(node, newChild) {
+         node.innerHTML = ''; // Empty out node contents
+         node.appendChild(newChild);
+       }
+
+       document.getElementById('json-input').addEventListener('input', reloadSvg);
+       reloadSvg();
+     });
+    </script>
   </body>
 </html>
