@@ -70,16 +70,16 @@ instance FromJSON Colour where
       "fuchsia" -> pure Fuchsia
       "purple"  -> pure Purple
       str       -> case parseString (hexParser <* eof) mempty (unpack str) of
-                     Success (r, g, b) -> pure $ Custom r g b
+                     Success colour -> pure colour
                      Failure _  -> fail ("Invalid colour \"" ++ unpack str ++ "\"")
 
-hexParser :: Parser (Word8, Word8, Word8)
+hexParser :: Parser Colour
 hexParser = do
   char '#'
   r <- rgbParser
   g <- rgbParser
   b <- rgbParser
-  pure (r, g, b)
+  pure $ Custom r g b
 
 rgbParser :: Parser Word8
 rgbParser = do
