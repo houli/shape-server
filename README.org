@@ -1,11 +1,48 @@
 #+TITLE: Shape Server
 #+OPTIONS: toc:nil
+[[file:img/demo.gif]]
 
 ** Building
 #+BEGIN_SRC bash
 $ stack setup && stack build
 #+END_SRC
+
 ** Running
 #+BEGIN_SRC bash
 $ stack exec shape-server
 #+END_SRC
+You will be able to access the server at =http://localhost:3000=
+
+** Supported shapes, transforms, colours and styles
+Some example JSON data has already been provided on the main page to get started. The following is a list of all supported data
+*** Shapes
+- =square=
+- =circle=
+*** Transforms (all parameters are JSON numbers)
+- =translate= with parameters =x= and =y=
+- =scale= with parameters =x= and =y=
+- =rotate= with parameter =angle=
+- =skewX= with parameter =angle=
+- =skewY= with parameter =angle=
+*** Colours
+- =white=
+- =silver=
+- =gray=
+- =black=
+- =red=
+- =maroon=
+- =yellow=
+- =olive=
+- =lime=
+- =green=
+- =aqua=
+- =teal=
+- =blue=
+- =navy=
+- =fuchsia=
+- =purple=
+- Custom hex colours of the form =#d8d836= etc.
+*** Styles
+- =strokeWidth= which takes a number
+- =stroke= which takes a colour string
+- =fill= which takes a colour string
