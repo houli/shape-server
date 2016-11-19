@@ -4,19 +4,13 @@ module Colour
    teal, blue, navy, fuchsia, purple, custom
   ) where
 
-import           Data.Aeson
+import           Data.Aeson hiding (Success)
 import           Data.Char (toLower)
-import           Data.Maybe (fromJust)
-import           Data.List (elemIndex)
 import           Data.Text (unpack)
 import           Data.Word (Word8)
+import           Numeric (readHex)
 import           Text.Printf (printf)
-import qualified Text.Regex.Posix as RP
-
--- OverloadedStrings cause problems unless regex match
--- operator has its type strictly defined
-(=~) :: String -> String -> [[String]]
-(=~) = (RP.=~)
+import           Text.Trifecta
 
 -- The original 16 HTML colours as well as custom hex colours
 data Colour = White
@@ -75,15 +69,25 @@ instance FromJSON Colour where
       "navy"    -> pure Navy
       "fuchsia" -> pure Fuchsia
       "purple"  -> pure Purple
-      str       -> parseCustom $ unpack str
-    where
-      parseCustom str = case str =~ "^#([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})([A-Fa-f0-9]{2})$" of
-                          [] -> fail ("Invalid colour \"" ++ str ++ "\"")
-                          [[_, r, g, b]] ->
-                            pure $ Custom (hexToWord8 r) (hexToWord8 g) (hexToWord8 b)
-      hexToWord8 :: String -> Word8
-      hexToWord8 = foldl (\n c -> 16 * n + hexChar (toLower c)) 0
-      hexChar ch = fromIntegral $ fromJust $ elemIndex ch "0123456789abcdef"
+      str       -> case parseString (hexParser <* eof) mempty (unpack str) of
+                     Success (r, g, b) -> pure $ Custom r g b
+                     Failure _  -> fail ("Invalid colour \"" ++ unpack str ++ "\"")
+
+hexParser :: Parser (Word8, Word8, Word8)
+hexParser = do
+  char '#'
+  r <- rgbParser
+  g <- rgbParser
+  b <- rgbParser
+  pure (r, g, b)
+
+rgbParser :: Parser Word8
+rgbParser = do
+  first <- hexDigit
+  second <- hexDigit
+  pure $ hexToWord8 [first, second]
+  where
+    hexToWord8 = fst . head . readHex
 
 white   = White
 silver  = Silver
